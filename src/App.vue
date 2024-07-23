@@ -3,7 +3,7 @@ import TodoList from './components/TodoList.vue';
 </script>
 
 <template>
-  <main className="flex min-h-screen flex-col justify-between p-24 max-w-[96em] mx-auto">
+  <main className="flex min-h-screen flex-col justify-between gap-8 p-12 max-w-[96em] mx-auto">
     <h1 className="text-xl text-center">Todo app</h1>
     <TodoList />
   </main>
