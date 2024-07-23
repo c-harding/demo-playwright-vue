@@ -1,0 +1,8 @@
+{
+  "name": "demo-playwright-vue-e2e",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "playwright": "playwright"
+  }
+}
