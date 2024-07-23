@@ -15,7 +15,7 @@ const saveEditedTodo = async (id: number, description: string) => {
 </script>
 
 <template>
-  <div class="flex flex-1 flex-col justify-between">
+  <main class="flex flex-1 flex-col justify-between">
     <div class="flex flex-col">
       <template v-for="todo in todoStore.todos" :key="todo.id">
         <TodoField
@@ -34,5 +34,5 @@ const saveEditedTodo = async (id: number, description: string) => {
       </template>
     </div>
     <TodoField @confirm="todoStore.addTodo" />
-  </div>
+  </main>
 </template>

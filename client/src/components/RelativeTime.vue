@@ -42,7 +42,7 @@ const labelWithValidity = (datetime: Date): [string, number] => {
     labelIfValid(
       relativeFormatter.format(-Math.floor(duration / hour), 'hours'),
       timeUntilExpiry(datetime, hour, day),
-    ) ?? [formatter.format(datetime), Infinity]
+    ) ?? ['on ' + formatter.format(datetime), Infinity]
   );
 };
 

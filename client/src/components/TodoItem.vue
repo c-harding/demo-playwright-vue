@@ -18,7 +18,7 @@ defineProps<{
 </script>
 
 <template>
-  <div class="flex p-2 hover:bg-gray-200 focus-within:bg-gray-200 items-center rounded-lg">
+  <article class="flex p-2 hover:bg-gray-200 focus-within:bg-gray-200 items-center rounded-lg">
     <AsyncButton
       class="text-gray-500 hover:text-blue-500"
       :title="todo.completionTime ? 'Mark as incomplete' : 'Mark as complete'"
@@ -33,7 +33,7 @@ defineProps<{
         {{ todo.description }}
       </div>
       <div class="text-xs text-gray-500">
-        <RelativeTime :datetime="todo.time" />
+        created <RelativeTime :datetime="todo.time" />
         <span v-if="todo.editedTime"> · edited <RelativeTime :datetime="todo.editedTime" /></span>
         <span v-if="todo.completionTime">
           · completed <RelativeTime :datetime="todo.completionTime"
@@ -48,5 +48,5 @@ defineProps<{
     <button class="text-gray-500 hover:text-red-500 p-2" @click="onDelete">
       <DeleteIcon class="h-6" />
     </button>
-  </div>
+  </article>
 </template>

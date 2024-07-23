@@ -6,7 +6,7 @@ import tailwindcss from 'tailwindcss'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [vue()],
+  plugins: [vue({ template: { compilerOptions: { whitespace: 'preserve' } } })],
   css: {
     postcss: {
       plugins: [tailwindcss()]

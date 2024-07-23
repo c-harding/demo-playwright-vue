@@ -20,6 +20,7 @@ const icon = computed(() => (!isEditMode.value ? PlusIcon : state.value ? CheckI
 const confirmTitle = computed(() =>
   !isEditMode.value ? 'Add todo' : state.value ? 'Save todo' : 'Delete todo',
 );
+const cancelTitle = computed(() => (!isEditMode.value ? 'Clear' : 'Cancel editing'));
 
 watch(
   () => props.existingDescription,
@@ -64,7 +65,7 @@ const handleAction = async () => {
       <AsyncButton
         @mousedown.prevent
         @click="handleCancel"
-        title="Clear"
+        :title="cancelTitle"
         :class="[
           'cursor-normal',
           !isEditMode && !state.trim() && 'invisible',
