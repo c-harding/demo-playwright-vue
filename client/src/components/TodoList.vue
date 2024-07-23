@@ -1,20 +1,15 @@
 <script setup lang="ts">
-import CreateField from './CreateField.vue';
+import TodoField from './TodoField.vue';
 import { useTodoStore } from '@/stores/todos';
 import TodoItem from './TodoItem.vue';
-import { computed, ref } from 'vue';
+import { ref } from 'vue';
 
 const todoStore = useTodoStore();
 
 const idToEdit = ref<number>();
 
-const nonEditedTodos = computed(() => todoStore.todos.filter((x) => x.id !== idToEdit.value));
-const editedTodo = computed(() =>
-  idToEdit.value ? todoStore.todos.find((x) => x.id === idToEdit.value) : undefined,
-);
-
-const saveEditedTodo = (id: number, description: string) => {
-  todoStore.editTodo(id, description);
+const saveEditedTodo = async (id: number, description: string) => {
+  await todoStore.editTodo(id, description);
   idToEdit.value = undefined;
 };
 </script>
@@ -22,22 +17,23 @@ const saveEditedTodo = (id: number, description: string) => {
 <template>
   <div class="flex flex-1 flex-col justify-between">
     <div class="flex flex-col">
-      <TodoItem
-        v-for="todo in nonEditedTodos"
-        :key="todo.id"
-        :todo="todo"
-        @edit="idToEdit = todo.id"
-        @toggle-done="todoStore.toggleTodo(todo.id)"
-        @delete="todoStore.deleteTodo(todo.id)"
-      />
+      <template v-for="todo in todoStore.todos" :key="todo.id">
+        <TodoField
+          v-if="idToEdit === todo.id"
+          placeholder="Edit todo"
+          :existing-description="todo.description"
+          @cancel-edit="idToEdit = undefined"
+          @confirm="saveEditedTodo(todo.id, $event)"
+        />
+        <TodoItem
+          v-else
+          :todo="todo"
+          @edit="idToEdit = todo.id"
+          @toggle-done="todoStore.toggleTodoCompletion(todo.id, !todo.completionTime)"
+          @delete="todoStore.deleteTodo(todo.id)"
+        />
+      </template>
     </div>
-    <CreateField
-      v-if="editedTodo"
-      :placeholder="`Edit todo`"
-      :existing-description="editedTodo.description"
-      @cancel-edit="idToEdit = undefined"
-      @confirm="saveEditedTodo(editedTodo.id, $event)"
-    />
-    <CreateField v-else placeholder="Add todo" @confirm="todoStore.addTodo" />
+    <TodoField placeholder="Add todo" @confirm="todoStore.addTodo" />
   </div>
 </template>

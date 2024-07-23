@@ -20,6 +20,13 @@ export default defineConfig({
   server: {
     watch: {
       usePolling: true
+    },
+    port: Number(process.env.CLIENT_PORT || process.env.PORT || 3001),
+    proxy: {
+      '/api': {
+        target: process.env.BACKEND || `http://localhost:${process.env.SERVER_PORT || 3000}`,
+        changeOrigin: true
+      }
     }
   }
 })

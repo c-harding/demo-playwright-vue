@@ -1,11 +1,16 @@
 <script setup lang="ts">
+import LoginForm from './components/LoginForm.vue';
 import TodoList from './components/TodoList.vue';
+import { useTodoStore } from './stores/todos';
+
+const todoStore = useTodoStore();
 </script>
 
 <template>
-  <main className="flex min-h-screen flex-col justify-between gap-8 p-12 max-w-[96em] mx-auto">
+  <main className="flex min-h-screen flex-col gap-8 p-12 max-w-[96em] mx-auto">
     <h1 className="text-xl text-center">Todo app</h1>
-    <TodoList />
+    <LoginForm :user="todoStore.user" @login="todoStore.setUser" @logout="todoStore.logout" />
+    <TodoList v-if="todoStore.user" />
   </main>
 </template>
 

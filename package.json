@@ -5,8 +5,10 @@
   "type": "module",
   "scripts": {
     "client-dev": "cd client && yarn dev",
+    "client-dev:debug": "cd client && yarn dev:debug",
     "server-dev": "cd server && yarn start",
     "dev": "concurrently --kill-others npm:client-dev npm:server-dev",
+    "dev:debug": "concurrently --kill-others npm:client-dev:debug npm:server-dev",
     "format:client": "cd client && yarn format",
     "format:server": "cd server && yarn format",
     "format": "yarn format:client && yarn format:server"
