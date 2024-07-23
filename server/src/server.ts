@@ -1,4 +1,5 @@
 import express, { type Request, type Response } from 'express'
+import storage from 'node-persist'
 
 interface Todo {
   id: number
@@ -14,7 +15,35 @@ app.use(express.json())
 
 var todoRouter = express.Router()
 
-const todos: { [key: string]: Todo[] } = {}
+// Fetch the persisted todos
+await storage.init()
+const todos: { [key: string]: Todo[] } = (await storage.get('todos')) ?? {}
+console.info('Got data for:', Object.keys(todos))
+
+async function persistTodos(initIfMissing = true) {
+  try {
+    await storage.set('todos', todos)
+  } catch (e: unknown) {
+    if (initIfMissing && (e as { code?: string })?.code === 'ENOENT') {
+      console.error('Error while persisting storage, missing config file', e)
+      await storage.init()
+      persistTodos(false)
+    } else {
+      console.error('Error while persisting storage', e)
+    }
+  }
+}
+
+// Persist after every mutable request
+const mutableMethods = ['POST', 'DELETE', 'PATCH', 'PUT']
+todoRouter.use((req, res, next) => {
+  if (mutableMethods.includes(req.method)) {
+    res.once('finish', async () => {
+      persistTodos()
+    })
+  }
+  next()
+})
 
 todoRouter.get('/:user', (req: Request, res: Response) => {
   const user = req.params.user
@@ -50,6 +79,9 @@ todoRouter.delete('/:user/:id', (req: Request, res: Response) => {
   }
 
   todos[user] = todos[user].filter((todo) => todo.id !== id)
+  if (todos[user].length === 0) {
+    delete todos[user]
+  }
   res.status(204).send()
 })
 
