@@ -1,23 +1,23 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref } from 'vue';
 
 defineProps<{
-  placeholder?: string
-}>()
+  placeholder?: string;
+}>();
 
 const emit = defineEmits<{
-  (e: 'confirm', input: string): void
-}>()
+  (e: 'confirm', input: string): void;
+}>();
 
-const state = ref('')
+const state = ref('');
 
 const handleAction = () => {
-  const value = state.value.trim()
+  const value = state.value.trim();
   if (value) {
-    emit('confirm', value)
+    emit('confirm', value);
   }
-  state.value = ''
-}
+  state.value = '';
+};
 </script>
 <template>
   <div

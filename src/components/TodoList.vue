@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import CreateField from './CreateField.vue'
-import { useTodoStore } from '@/stores/todos'
+import CreateField from './CreateField.vue';
+import { useTodoStore } from '@/stores/todos';
 
-const todoStore = useTodoStore()
+const todoStore = useTodoStore();
 </script>
 
 <template>
