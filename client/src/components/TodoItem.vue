@@ -41,11 +41,11 @@ defineProps<{
       </div>
     </div>
 
-    <button class="text-gray-500 hover:text-blue-500 p-2" @click="onEdit">
+    <button class="text-gray-500 hover:text-blue-500 p-2" @click="onEdit" title="Edit todo">
       <PencilIcon class="h-6" />
     </button>
 
-    <button class="text-gray-500 hover:text-red-500 p-2" @click="onDelete">
+    <button class="text-gray-500 hover:text-red-500 p-2" @click="onDelete" title="Delete todo">
       <DeleteIcon class="h-6" />
     </button>
   </article>
