@@ -115,7 +115,7 @@ test('should show the correct time', async ({ page, todoPage }) => {
   await expect(todoPage.todoItems.first()).toContainText('created just now');
 
   await page.clock.fastForward('00:45');
-  await expect.soft(todoPage.todoItems.first()).toContainText('created less than a minute ago');
+  await expect.soft(todoPage.todoItems.first()).toContainText('created less than 1 minute ago');
 
   await page.clock.fastForward('00:30');
   await expect.soft(todoPage.todoItems.first()).toContainText('created 1 minute ago');
