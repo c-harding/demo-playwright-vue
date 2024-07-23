@@ -5,12 +5,16 @@
   "type": "module",
   "scripts": {
     "client-dev": "cd client && yarn dev",
-    "client-format": "cd client && yarn format",
-    "format": "yarn client-format"
+    "server-dev": "cd server && yarn start",
+    "dev": "concurrently --kill-others npm:client-dev npm:server-dev",
+    "format:client": "cd client && yarn format",
+    "format:server": "cd server && yarn format",
+    "format": "yarn format:client && yarn format:server"
   },
   "dependencies": {},
   "devDependencies": {
     "@playwright/test": "^1.44.1",
+    "concurrently": "^8.2.2",
     "prettier": "^3.2.5"
   },
   "workspaces": [
