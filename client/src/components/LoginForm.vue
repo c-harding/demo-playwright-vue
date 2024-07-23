@@ -25,7 +25,7 @@ const onLogin = async () => {
     <p>
       Logged in as: <code>{{ user }}</code>
     </p>
-    <AsyncButton class="rounded bg-blue-300 text-black px-2 py-1" @click="props.onLogout?.()">
+    <AsyncButton class="rounded bg-blue-300 text-black px-2 py-1" @click="onLogout?.()">
       Log out
     </AsyncButton>
   </div>

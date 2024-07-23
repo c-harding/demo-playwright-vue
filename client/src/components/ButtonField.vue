@@ -1,12 +1,16 @@
 <script setup lang="ts">
 import AsyncForm from './AsyncForm.vue';
 import AsyncButton from './AsyncButton.vue';
+import { twMerge } from 'tailwind-merge';
+import { ref } from 'vue';
 
 defineProps<{
   placeholder?: string;
+  inputTitle?: string;
+  confirmTitle?: string;
   allowSaveWhenEmpty?: boolean;
-  cancelButtonClass?: string;
-  submitButtonClass?: string;
+  autofocus?: boolean;
+  confirmButtonClass?: string;
   onConfirm(value: string): Promise<void> | void;
 }>();
 
@@ -15,11 +19,19 @@ defineSlots<{
   button(): void;
 }>();
 
+const input = ref<HTMLInputElement>();
+
+const focus = () => {
+  input.value?.focus();
+};
+
+defineExpose({ focus });
+
 const value = defineModel<string>({ default: '' });
 </script>
 <template>
   <AsyncForm
-    class="flex border border-solid border-gray-300 bg-white border-r-0 rounded-lg has-[input:focus]:outline-auto"
+    class="flex border border-solid border-gray-300 bg-white rounded-lg has-[input:focus]:outline outline-offset-1 outline-blue-400"
     @submit="onConfirm(value)"
   >
     <label class="flex flex-1 cursor-text">
@@ -27,7 +39,9 @@ const value = defineModel<string>({ default: '' });
         ref="input"
         type="text"
         :placeholder="placeholder"
+        :title="inputTitle ?? placeholder"
         v-model="value"
+        size="1"
         class="border-0 focus:outline-0 bg-inherit rounded-l-lg p-1 flex-1"
       />
       <slot name="inputRight" />
@@ -35,8 +49,13 @@ const value = defineModel<string>({ default: '' });
     <AsyncButton
       type="submit"
       :disabled="!allowSaveWhenEmpty && !value"
-      class="px-4 py-2 disabled:bg-gray-400 text-white rounded-r-lg"
-      :class="[submitButtonClass ?? 'bg-green-500']"
+      :title="confirmTitle"
+      :class="
+        twMerge(
+          'px-4 bg-green-500 disabled:bg-gray-400 text-white rounded-l-none -m-px ms-0',
+          confirmButtonClass,
+        )
+      "
     >
       <slot name="button" />
     </AsyncButton>

@@ -2,12 +2,14 @@
 import { computed, inject, ref } from 'vue';
 import { LoadingIcon } from 'mdi-vue3';
 import { asyncFormLoadingInjectionKey } from './AsyncForm.vue';
+import { twMerge, type ClassNameValue } from 'tailwind-merge';
 
 const props = withDefaults(
   defineProps<{
     disabled?: boolean;
+    class?: ClassNameValue;
     loading?: boolean;
-    loadingClass?: string;
+    loadingClass?: ClassNameValue;
     onClick?: () => void | Promise<void>;
     type?: 'submit' | 'reset' | 'button';
   }>(),
@@ -40,10 +42,10 @@ const handleClick = async () => {
   <button
     :type="type"
     :disabled="disabled || loading"
-    class="grid [&>*]:[grid-area:1/1]"
+    :class="twMerge('grid [&>*]:[grid-area:1/1] p-2 rounded-lg', props.class)"
     @click="handleClick"
   >
-    <LoadingIcon v-if="loading" :class="[loadingClass ?? 'h-6', 'animate-spin m-auto']" />
-    <div :class="{ invisible: loading }"><slot /></div>
+    <LoadingIcon v-if="loading" :class="twMerge('animate-spin m-auto h-6', loadingClass)" />
+    <div :class="loading && 'invisible'"><slot /></div>
   </button>
 </template>

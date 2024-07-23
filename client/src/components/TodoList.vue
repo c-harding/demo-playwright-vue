@@ -20,7 +20,6 @@ const saveEditedTodo = async (id: number, description: string) => {
       <template v-for="todo in todoStore.todos" :key="todo.id">
         <TodoField
           v-if="idToEdit === todo.id"
-          placeholder="Edit todo"
           :existing-description="todo.description"
           @cancel-edit="idToEdit = undefined"
           @confirm="saveEditedTodo(todo.id, $event)"
@@ -34,6 +33,6 @@ const saveEditedTodo = async (id: number, description: string) => {
         />
       </template>
     </div>
-    <TodoField placeholder="Add todo" @confirm="todoStore.addTodo" />
+    <TodoField @confirm="todoStore.addTodo" />
   </div>
 </template>

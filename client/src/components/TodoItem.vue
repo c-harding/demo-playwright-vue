@@ -18,9 +18,9 @@ defineProps<{
 </script>
 
 <template>
-  <div class="flex hover:bg-gray-200 items-center rounded-lg">
+  <div class="flex p-2 hover:bg-gray-200 focus-within:bg-gray-200 items-center rounded-lg">
     <AsyncButton
-      class="text-gray-500 hover:text-blue-500 p-2"
+      class="text-gray-500 hover:text-blue-500"
       :title="todo.completionTime ? 'Mark as incomplete' : 'Mark as complete'"
       @click="onToggleDone"
     >
@@ -28,8 +28,8 @@ defineProps<{
       <CheckboxBlankCircleOutlineIcon v-else class="h-6" />
     </AsyncButton>
 
-    <div class="flex-1 m-2 flex flex-col gap-1">
-      <div :class="{ 'line-through': todo.completionTime }" @dblclick="onEdit">
+    <div class="flex-1 mx-2 flex flex-col gap-1">
+      <div :class="!!todo.completionTime && 'line-through'" @dblclick="onEdit">
         {{ todo.description }}
       </div>
       <div class="text-xs text-gray-500">

@@ -5,7 +5,6 @@ import AsyncButton from './AsyncButton.vue';
 import ButtonField from './ButtonField.vue';
 
 const props = defineProps<{
-  placeholder?: string;
   existingDescription?: string;
   onConfirm: (input: string) => Promise<void> | void;
   onCancelEdit?: () => Promise<void> | void;
@@ -13,16 +12,21 @@ const props = defineProps<{
 }>();
 
 const state = ref('');
-const input = ref<HTMLInputElement>();
+const buttonField = ref<InstanceType<typeof ButtonField>>();
 
 const isEditMode = computed(() => props.existingDescription !== undefined);
+const placeholder = computed(() => (isEditMode.value ? 'Edit todo' : 'Add todo'));
+const icon = computed(() => (!isEditMode.value ? PlusIcon : state.value ? CheckIcon : DeleteIcon));
+const confirmTitle = computed(() =>
+  !isEditMode.value ? 'Add todo' : state.value ? 'Save todo' : 'Delete todo',
+);
 
 watch(
   () => props.existingDescription,
   () => {
     state.value = props.existingDescription || '';
     if (state.value) {
-      setTimeout(() => input.value?.focus());
+      setTimeout(() => buttonField.value?.focus());
     }
   },
   { immediate: true },
@@ -49,18 +53,21 @@ const handleAction = async () => {
 <template>
   <ButtonField
     :placeholder="placeholder"
+    ref="buttonField"
     v-model="state"
     :allowSaveWhenEmpty="isEditMode"
-    :submitButtonClass="isEditMode && !state ? 'bg-red-500' : undefined"
+    :confirm-title="confirmTitle"
+    :confirmButtonClass="isEditMode && !state ? 'bg-red-500' : undefined"
     @confirm="handleAction"
   >
     <template v-slot:inputRight>
       <AsyncButton
         @mousedown.prevent
         @click="handleCancel"
-        class="cursor-normal p-2"
+        title="Clear"
         :class="[
-          { invisible: !isEditMode && !state.trim() },
+          'cursor-normal',
+          !isEditMode && !state.trim() && 'invisible',
           isEditMode ? 'text-gray-500' : 'text-red-500',
         ]"
       >
@@ -68,9 +75,7 @@ const handleAction = async () => {
       </AsyncButton>
     </template>
     <template v-slot:button>
-      <PlusIcon v-if="!isEditMode" class="h-6" />
-      <CheckIcon v-else-if="state" class="h-6" />
-      <DeleteIcon v-else class="h-6" />
+      <component :is="icon" class="h-6" />
     </template>
   </ButtonField>
 </template>

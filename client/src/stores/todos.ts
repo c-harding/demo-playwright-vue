@@ -38,10 +38,9 @@ export const useTodoStore = defineStore('todos', () => {
 
   const userUrl = computed(() => encodeURIComponent(user.value));
 
-  async function fetchTodos() {
-    if (!user.value) throw new Error('Cannot fetch todos, not logged in');
+  async function fetchTodos(newUser: string) {
     try {
-      const response = await todosApi.get<RawTodo[]>(`/${userUrl.value}`);
+      const response = await todosApi.get<RawTodo[]>(`/${encodeURIComponent(newUser)}`);
       const parsedResponse = response.data.map(parseTodo);
       todos.value = parsedResponse;
       return parsedResponse;
@@ -101,10 +100,14 @@ export const useTodoStore = defineStore('todos', () => {
     }
   }
 
-  async function setUser(newUser: string) {
-    user.value = newUser.trim().toLowerCase();
-    todos.value = [];
-    await fetchTodos();
+  async function setUser(rawNewUser: string) {
+    const newUser = rawNewUser.trim().toLowerCase();
+    try {
+      todos.value = undefined;
+      await fetchTodos(newUser);
+    } finally {
+      user.value = newUser;
+    }
   }
 
   function logout() {
@@ -113,7 +116,7 @@ export const useTodoStore = defineStore('todos', () => {
   }
 
   if (user.value) {
-    fetchTodos();
+    fetchTodos(user.value);
   } else {
     todos.value = [];
   }
@@ -121,7 +124,6 @@ export const useTodoStore = defineStore('todos', () => {
   return {
     user: readonly(user),
     todos,
-    fetchTodos,
     addTodo,
     deleteTodo,
     editTodo,
