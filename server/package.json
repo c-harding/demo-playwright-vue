@@ -2,12 +2,14 @@
   "name": "demo-playwright-vue-server",
   "private": true,
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "dist/server.js",
   "license": "MIT",
   "scripts": {
-    "start": "ts-node server.ts",
+    "prepare": "tsc",
     "build": "tsc",
-    "format": "prettier --write server.ts"
+    "serve": "node dist/server.js",
+    "dev": "ts-node src/server.ts",
+    "format": "prettier --write src/"
   },
   "dependencies": {
     "express": "^4.19.2"
