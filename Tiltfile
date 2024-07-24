@@ -132,6 +132,21 @@ local_resource('e2e',
     resource_deps=['server', 'client'],
 )
 
+load('ext://uibutton', 'cmd_button')
+cmd_button('e2e:1-ui',
+    argv=['yarn', 'test:e2e:ui'],
+    resource='e2e',
+    icon_name='preview',
+    text='Playwright UI',
+)
+
+cmd_button('e2e:2-codegen',
+    argv=['yarn', 'test:e2e:codegen', 'http://localhost:' + os.getenv('CLIENT_PORT')],
+    resource='e2e',
+    icon_name='code',
+    text='Playwright Codegen',
+)
+
 # Extensions are open-source, pre-packaged functions that extend Tilt
 #
 #   More info: https://github.com/tilt-dev/tilt-extensions
