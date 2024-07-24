@@ -1,0 +1,33 @@
+name: Run Tilt CI
+
+on:
+  push:
+    branches: ['*']
+
+jobs:
+  tilt-ci:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      - name: Install PNPM dependencies
+        run: |
+          yarn
+
+      - name: Set up Playwright
+        run: |
+          yarn playwright install
+
+      - name: Set up Tilt
+        run: |
+          curl -fsSL https://raw.githubusercontent.com/tilt-dev/tilt/master/scripts/install.sh | bash
+
+      - name: Run E2E tests
+        run: tilt ci
