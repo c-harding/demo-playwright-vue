@@ -112,6 +112,26 @@ local_resource('purge server',
     auto_init=False,
 )
 
+local_resource('client',
+    labels=['demo-playwright-client'],
+    resource_deps=['server'],
+    dir='client',
+    serve_dir='client',
+    cmd='yarn',
+    serve_cmd='yarn dev',
+    links=['http://localhost:' + os.getenv('CLIENT_PORT')],
+)
+
+local_resource('e2e',
+    labels=['demo-playwright-e2e'],
+    dir='e2e',
+    cmd='yarn exec playwright test',
+    auto_init=(config.tilt_subcommand == 'ci'),
+    allow_parallel=True,
+    trigger_mode=TRIGGER_MODE_MANUAL,
+    resource_deps=['server', 'client'],
+)
+
 # Extensions are open-source, pre-packaged functions that extend Tilt
 #
 #   More info: https://github.com/tilt-dev/tilt-extensions
