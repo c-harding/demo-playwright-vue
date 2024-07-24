@@ -18,8 +18,9 @@ print("""
    evaluates this file.
 -----------------------------------------------------------------
 """.strip())
-warn('ℹ️ Open {tiltfile_path} in your favorite editor to get started.'.format(
-    tiltfile_path=config.main_path))
+
+os.putenv('SERVER_PORT', '3002')
+os.putenv('CLIENT_PORT', '3003')
 
 
 # Build Docker image
@@ -93,37 +94,26 @@ warn('ℹ️ Open {tiltfile_path} in your favorite editor to get started.'.forma
 #                ]
 # )
 
+local_resource('server',
+    labels=['demo-playwright-server'],
+    dir='server',
+    serve_dir='server',
+    cmd='yarn && yarn build',
+    serve_cmd='yarn dev',
+    ignore=['server/dist', 'server/.*'],
+    links=['http://localhost:' + os.getenv('SERVER_PORT')],
+)
+
+local_resource('purge server',
+    labels=['demo-playwright-server'],
+    dir='server',
+    cmd='yarn purge',
+    trigger_mode=TRIGGER_MODE_MANUAL,
+    auto_init=False,
+)
 
 # Extensions are open-source, pre-packaged functions that extend Tilt
 #
 #   More info: https://github.com/tilt-dev/tilt-extensions
 #
-load('ext://git_resource', 'git_checkout')
-
-
-# Organize logic into functions
-#   Tiltfiles are written in Starlark, a Python-inspired language, so
-#   you can use functions, conditionals, loops, and more.
-#
-#   More info: https://docs.tilt.dev/tiltfile_concepts.html
-#
-def tilt_demo():
-    # Tilt provides many useful portable built-ins
-    # https://docs.tilt.dev/api.html#modules.os.path.exists
-    if os.path.exists('tilt-avatars/Tiltfile'):
-        # It's possible to load other Tiltfiles to further organize
-        # your logic in large projects
-        # https://docs.tilt.dev/multiple_repos.html
-        load_dynamic('tilt-avatars/Tiltfile')
-    watch_file('tilt-avatars/Tiltfile')
-    git_checkout('https://github.com/tilt-dev/tilt-avatars.git',
-                 checkout_dir='tilt-avatars')
-
-
-# Edit your Tiltfile without restarting Tilt
-#   While running `tilt up`, Tilt watches the Tiltfile on disk and
-#   automatically re-evaluates it on change.
-#
-#   To see it in action, try uncommenting the following line with
-#   Tilt running.
-# tilt_demo()
+# load('ext://git_resource', 'git_checkout')
